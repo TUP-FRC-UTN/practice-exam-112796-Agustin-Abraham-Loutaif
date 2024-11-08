@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { NewOrderComponent } from "./new-order/new-order.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NewOrderComponent],
+  imports: [RouterOutlet, RouterModule, NewOrderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

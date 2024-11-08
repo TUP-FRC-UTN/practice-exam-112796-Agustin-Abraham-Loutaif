@@ -5,15 +5,15 @@ import { ListOrderComponent } from './list-order/list-order.component';
 export const routes: Routes = [
     {
         path: "",
-        redirectTo: "/create-order",
+        redirectTo: "create-order",
         pathMatch: 'full'
     },
     {
-        path: "/create-order",
+        path: "create-order",
         component: NewOrderComponent
     },
     {
-        path: "/orders",
+        path: "orders",
         component: ListOrderComponent
     }
 ];

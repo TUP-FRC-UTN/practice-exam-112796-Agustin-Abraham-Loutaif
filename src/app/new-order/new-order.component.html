@@ -1,24 +1,118 @@
-<nav class="navbar bg-primary" data-bs-theme="dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
+<div>
+  <h2>Create New Order</h2>
+</div>
+
+<form [formGroup]="datosCliente" (ngSubmit)="submit()">
+  <div class="row">
+    <div class="col">
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Nombre:</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1" formControlName="nombre"
+        [ngClass]="{'is-invalid': datosCliente.get('nombre')?.invalid}">
+        @if (datosCliente.controls["nombre"]; as nombre) {
+          @if (nombre.invalid) {
+            @if (nombre.errors?.['required']) {
+              <span>El campo es requerido</span>
+            }
+            @if (nombre.errors?.['minlength']) {
+              <span>Minimo 3 caracteres</span>
+            }
+          }
+        }
+      </div>
+    </div>
+    <div class="col">
+      <div class="mb-3">
+        <label for="exampleFormControlInput2" class="form-label">Email:</label>
+        <input type="email" class="form-control" id="exampleFormControlInput2" formControlName="email"
+        [ngClass]="{'is-invalid': datosCliente.get('email')?.invalid}">
+        @if (datosCliente.controls["email"]; as email) {
+          @if (email.invalid) {
+            @if (email.errors?.['sobrelimite']) {
+              <span class="text-danger">Ya hiciste mas de 3 pedidos en las ultimas 24 horas</span>
+            }
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-2">
+          <h2>Productos</h2>
         </div>
+        <div class="col"></div>
+        <div class="col-1">
+          <button type="button" class="btn btn-primary" (click)="pushProducto()">+</button>
         </div>
-</nav>
+      </div>
+    </div>
+    <div class="card-body">
+      <div formArrayName="productos">
+          @for (item of productosArray.controls; track $index) {
+          <div class="row" [ngClass]="{'is-invalid': datosCliente.get('productos')?.invalid}" [formGroupName]="$index">
+            <div class="col-2">
+              <label for="Productos" class="form-label">Producto:</label>
+              <select name="" id="Productos" class="form-select" formControlName="id">
+                @for (producto of listaProductos; track producto.id) {
+                  <option [value]="producto.id">{{producto.name}}</option>
+                }
+              </select>
+            </div>
+            <div class="col-2">
+              <label for="Cantidad" class="form-label">Cantidad:</label>
+              <input type="number" class="form-control" id="Cantidad" formControlName="cantidad">
+            </div>
+            <div class="col-2">
+              <label for="Precio" class="form-label">Precio:</label>
+              <input type="number" class="form-control" id="Precio" formControlName="precio" readonly>
+            </div>
+            <div class="col-2">
+              <label for="Stock" class="form-label">Stock:</label>
+              <input type="number" class="form-control" id="Stock" formControlName="stock" readonly>
+            </div>
+            <div class="col-1">
+              <button type="button" class="btn btn-danger" (click)="deleteProducto($index)">X</button>
+            </div>
+          </div>
+        }
+        @if (datosCliente.controls["productos"]; as productos) {
+          @if (productos.invalid) {
+            @if (productos.errors?.['required']) {
+              <span class="text-danger">El campo es requerido</span>
+            }
+            @if (productos.errors?.['duplicado']) {
+              <span class="text-danger">No puede haber productos repetidos</span>
+            }
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-header">
+      Productos Seleccionados
+    </div>
+    <div class="card-body">
+      @for (item of productosArray.controls; track $index) {
+        <ul>
+          <li>
+            {{item.get("id")?.value}} - Cantidad: {{item.get("cantidad")?.value}} 
+            - Precio: {{item.get("precio")?.value}} - Stock: {{item.get("stock")?.value}}
+          </li>
+        </ul>
+      }
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Create Order</button>
+</form>
